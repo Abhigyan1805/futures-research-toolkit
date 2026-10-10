@@ -1,0 +1,6 @@
+ticker,n_bars,doji,hammer,inverted_hammer,shooting_star,marubozu_bullish,marubozu_bearish,bullish_engulfing,bearish_engulfing,bullish_harami,bearish_harami,morning_star,evening_star,three_white_soldiers,three_black_crows
+CL=F,4470,462,191,149,125,9,9,212,226,190,153,163,154,89,66
+ES=F,4471,513,172,120,179,38,11,260,205,130,182,190,181,170,66
+GC=F,4470,543,188,167,183,135,141,147,186,175,160,165,155,70,50
+NQ=F,4471,519,169,130,208,33,19,243,227,161,185,189,196,139,70
+ZN=F,4469,433,166,160,186,17,36,200,194,152,185,167,170,84,84

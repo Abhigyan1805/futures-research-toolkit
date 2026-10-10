@@ -1,0 +1,17 @@
+{
+  "n_tickers": 5,
+  "n_bars": 22351,
+  "date_start": "2009-01-02",
+  "date_end": "2026-10-09",
+  "n_pattern_events": 11802,
+  "n_tests": 42,
+  "n_significant_bh": 4,
+  "n_significant_in_direction": 0,
+  "significant_patterns": "morning_star, shooting_star",
+  "mean_hit_rate": 0.4955,
+  "mean_base_rate": 0.504,
+  "best_pattern": "shooting_star",
+  "best_horizon": 1,
+  "best_hit_rate": 0.4086,
+  "best_p_bh": 0.0042
+}

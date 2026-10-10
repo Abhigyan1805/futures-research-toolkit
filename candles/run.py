@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from candles.config import DEFAULT_CONFIG, PatternConfig
+from candles.config import DEFAULT_CONFIG, PATTERN_NAMES, PatternConfig
 from candles.pipeline import DEFAULT_TICKERS, HORIZONS, evaluate_universe, ticker_event_counts
 from data import load_ohlc
 
@@ -78,16 +78,19 @@ def _make_figure(summary: pd.DataFrame, path: Path) -> None:
 def _headline(pooled: pd.DataFrame, summary: pd.DataFrame, tickers: list[str]) -> dict:
     directional = summary[summary["side"] != "neutral"]
     sig = directional[directional["bh_significant"]]
-    best = summary.sort_values("primary_p_bh").iloc[0]
+    in_dir = directional[directional["bh_significant"] & (directional["beats_base"] == True)]  # noqa: E712
+    ranked = directional.dropna(subset=["primary_p_bh"]).sort_values("primary_p_bh")
+    best = ranked.iloc[0]
     index = pooled.index
     return {
         "n_tickers": len(tickers),
         "n_bars": int(len(pooled)),
         "date_start": str(index.min().date()),
         "date_end": str(index.max().date()),
-        "n_pattern_events": int(summary["n_signals"].sum()),
+        "n_pattern_events": int(pooled[list(PATTERN_NAMES)].to_numpy().sum()),
         "n_tests": int(len(summary)),
         "n_significant_bh": int(summary["bh_significant"].sum()),
+        "n_significant_in_direction": int(len(in_dir)),
         "significant_patterns": ", ".join(sorted(sig["pattern"].unique())) or "none",
         "mean_hit_rate": round(float(directional["hit_rate"].mean()), 4),
         "mean_base_rate": round(float(directional["base_rate"].mean()), 4),

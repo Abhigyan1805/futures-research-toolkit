@@ -43,23 +43,52 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 
 
+def _binom_pmf(n: int, p: float) -> np.ndarray:
+    """Binomial pmf for k = 0..n, computed in log space for numerical safety."""
+    p = min(max(p, 0.0), 1.0)
+    if p <= 0.0:
+        out = np.zeros(n + 1)
+        out[0] = 1.0
+        return out
+    if p >= 1.0:
+        out = np.zeros(n + 1)
+        out[n] = 1.0
+        return out
+    ks = np.arange(n + 1)
+    logs = np.array([_log_comb(n, int(i)) for i in ks]) + ks * math.log(p) + (n - ks) * \
+        math.log1p(-p)
+    return np.exp(logs - logs.max())
+
+
 def binom_test(k: int, n: int, p: float) -> float:
-    """Exact two-sided binomial p-value for ``k`` successes in ``n`` trials."""
+    """Exact two-sided binomial p-value for ``k`` successes in ``n`` trials.
+
+    Two-sided by the "method of small p-values": sum the probabilities of every
+    outcome no more likely than the one observed.  This flags a pattern as
+    informative whether it leans *with* or *against* its textbook direction.
+    """
     if n <= 0:
         return float("nan")
-    p = min(max(p, 0.0), 1.0)
     if not (0 <= k <= n):
         raise ValueError("k must satisfy 0 <= k <= n")
-    if p == 0.0:
-        return 0.0 if k > 0 else 1.0
-    # log pmf to avoid overflow for large n
-    logs = np.array([_log_comb(n, i) + i * math.log(p) + (n - i) * math.log1p(-p)
-                     if p < 1.0 else (0.0 if i == n else -np.inf)
-                     for i in range(n + 1)])
-    pmf = np.exp(logs - logs.max())
+    pmf = _binom_pmf(n, p)
     observed = pmf[k]
     total = pmf[pmf <= observed * (1.0 + 1e-9)].sum()
     return float(min(1.0, total / pmf.sum()))
+
+
+def binom_directional_p(k: int, n: int, p: float) -> float:
+    """One-sided binomial p-value for the pattern's *claimed* direction.
+
+    A "hit" is a forward move in the pattern's claimed direction (up for a
+    bullish pattern, down for a bearish one), and ``p`` is the matching base
+    rate.  Small ``P(X >= k)`` means the pattern leans the way the textbook says
+    significantly more often than chance -- not merely that it deviates.
+    """
+    if n <= 0:
+        return float("nan")
+    pmf = _binom_pmf(n, p)
+    return float(min(1.0, pmf[k:].sum() / pmf.sum()))
 
 
 def _log_comb(n: int, k: int) -> float:
@@ -217,7 +246,8 @@ def evaluate(candles: pd.DataFrame, patterns: tuple[str, ...],
                 "n_signals": int(n),
             }
             if n == 0:
-                row.update({"hit_rate": np.nan, "base_rate": np.nan, "binom_p": np.nan,
+                row.update({"hit_rate": np.nan, "base_rate": np.nan, "edge": np.nan,
+                            "beats_base": np.nan, "binom_p": np.nan, "binom_p_dir": np.nan,
                             "mean_return": np.nan, "median_return": np.nan, "t_stat": np.nan,
                             "t_p": np.nan, "boot_p": np.nan})
                 rows.append(row)
@@ -236,11 +266,17 @@ def evaluate(candles: pd.DataFrame, patterns: tuple[str, ...],
             if hits is not None:
                 row["hit_rate"] = hits / n
                 row["base_rate"] = base
+                row["edge"] = hits / n - base
+                row["beats_base"] = bool(hits / n > base)
                 row["binom_p"] = binom_test(hits, n, base)
+                row["binom_p_dir"] = binom_directional_p(hits, n, base)
             else:
                 row["hit_rate"] = np.nan
                 row["base_rate"] = np.nan
+                row["edge"] = np.nan
+                row["beats_base"] = np.nan
                 row["binom_p"] = np.nan
+                row["binom_p_dir"] = np.nan
             t, p = ttest_1samp(event, 0.0)
             row["t_stat"] = t
             row["t_p"] = p

@@ -9,6 +9,7 @@ import pytest
 from candles.config import PATTERN_NAMES, PATTERN_SIDES
 from candles.significance import (
     benjamini_hochberg,
+    binom_directional_p,
     binom_test,
     evaluate,
     forward_returns,
@@ -31,6 +32,14 @@ def test_binom_test_against_base_rate():
     assert 0.02 < binom_test(60, 100, 0.5) < 0.09
     # with a 60% base rate it should not be significant
     assert binom_test(60, 100, 0.6) == pytest.approx(1.0, abs=1e-9)
+
+
+def test_binom_directional_one_sided():
+    assert binom_directional_p(9, 10, 0.5) == pytest.approx(11 / 1024, rel=1e-6)
+    # symmetric: 5/10 is not evidence in the claimed direction
+    assert binom_directional_p(5, 10, 0.5) > 0.5
+    # 9 up moves with a 50% up base rate is strong directional evidence
+    assert binom_directional_p(90, 100, 0.5) < 1e-10
 
 
 def test_ttest_known_value():
@@ -87,8 +96,8 @@ def test_evaluate_shape_and_columns():
                        n_boot=200, seed=0)
     assert len(summary) == len(PATTERN_NAMES) * 3
     for col in ("pattern", "side", "horizon", "n_signals", "hit_rate", "base_rate",
-                "binom_p", "t_p", "boot_p", "primary_p", "primary_p_bh",
-                "bh_significant"):
+                "edge", "beats_base", "binom_p", "binom_p_dir", "t_p", "boot_p",
+                "primary_p", "primary_p_bh", "bh_significant"):
         assert col in summary.columns
     # doji is neutral -> no hit rate / binomial p
     doji = summary[summary["pattern"] == "doji"]
