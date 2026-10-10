@@ -18,6 +18,7 @@ def main() -> None:
             lines += ["_not run_", ""]
             continue
         for k, v in json.loads(p.read_text()).items():
+            v = round(v, 4) if isinstance(v, float) else v
             lines.append(f"- **{k}**: {v}")
         lines.append("")
     (ROOT / "docs" / "RESULTS.md").write_text("\n".join(lines))
