@@ -98,7 +98,7 @@ class PatternConfig:
     def as_dict(self) -> dict:
         return {f.name: getattr(self, f.name) for f in fields(self)}
 
-    def replace(self, **kwargs) -> "PatternConfig":
+    def replace(self, **kwargs) -> PatternConfig:
         base = self.as_dict()
         base.update(kwargs)
         return PatternConfig(**base)
