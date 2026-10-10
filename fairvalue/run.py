@@ -45,7 +45,7 @@ def _rate(index, offline) -> pd.Series:
 
 
 def _contract(name, fut, spot, kind, offline, storage=0.0, q=0.0):
-    df = pd.concat({"fut": fut, "spot": spot}, axis=1).dropna()
+    df = pd.concat({"fut": fut, "spot": spot}, axis=1, sort=True).dropna()
     df = df[(df > 0).all(axis=1)]
     df["r"] = _rate(df.index, offline)
     df["days"] = days_to_front_expiry(df.index, kind)
@@ -58,7 +58,9 @@ def _contract(name, fut, spot, kind, offline, storage=0.0, q=0.0):
     df["gap"] = df.fair_cont - df.fut
     df["gap_bps"] = 1e4 * df.gap / df.fut
     b = implied_carry(df.spot, df.fut, T)
-    df["implied_yield"] = df.r + storage - q - b     # q (ES) or convenience (GC/CL)
+    # Implied yield solves b = r + u - y: y is the dividend yield (ES) or the convenience
+    # yield (GC/CL) the market price implies, with the modelled income/convenience set to 0.
+    df["implied_yield"] = df.r + storage - b
     df.index.name = "date"
     return df
 
@@ -70,7 +72,7 @@ def _stats(name, df, headline):
     headline[f"{name}_median_abs_gap_bps"] = round(float(g.abs().median()), 1)
     headline[f"{name}_median_gap_bps"] = round(float(g.median()), 1)
     headline[f"{name}_median_implied_yield_pct"] = round(float(df.implied_yield.median() * 100), 2)
-    headline[f"{name}_share_backwardation_pct"] = round(float((df.basis > 0).mean() * 100), 1)
+    headline[f"{name}_share_spot_above_futures_pct"] = round(float((df.basis > 0).mean() * 100), 1)
 
 
 def run(out_dir: Path = Path("results/fairvalue"), offline: bool | None = None) -> dict:
