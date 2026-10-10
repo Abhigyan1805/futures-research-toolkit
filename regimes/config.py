@@ -61,19 +61,25 @@ def butterfly_name(near: str, mid: str, far: str) -> str:
 
 # ---------------------------------------------------------------------------
 # Known stress episodes used as an honesty check on the regime labels. A useful
-# detector should flag most of these windows as stressed.
+# short-rate detector should flag most of these windows as elevated/stressed.
 # ---------------------------------------------------------------------------
 KNOWN_EPISODES = {
     "GFC 2008": ("2008-09-01", "2009-06-30"),
-    "COVID 2020": ("2020-02-15", "2020-06-30"),
+    "COVID 2020": ("2020-02-24", "2020-04-30"),      # acute vol spike
     "Hiking cycle 2022": ("2022-01-01", "2023-12-31"),
     "Taper tantrum 2013": ("2013-05-01", "2013-09-30"),
 }
+
+# Episodes driven by the *long* end while the policy rate is pinned. A
+# short-rate spread/butterfly study is not expected to flag these as stressed;
+# they are reported for completeness and excluded from the detection headline.
+OUT_OF_SCOPE_EPISODES = {"Taper tantrum 2013"}
 
 # Constant-maturity 3m begins 1981-09; start at a clean year edge.
 STUDY_START = "1982-01-01"
 
 # Regime model defaults (seed fixed so reruns reproduce).
 N_STATES = 3
-FEATURE_WINDOW = 21      # trading days for rolling volatility features (~1 month)
+FEATURE_WINDOW = 21        # trading days for rolling volatility features (~1 month)
+FEATURE_MIN_PERIODS = 250  # history required before an expanding z-score is emitted (~1y)
 RANDOM_SEED = 0

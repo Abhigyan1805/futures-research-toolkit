@@ -54,6 +54,17 @@ def regime_correlation_matrices(
     return out
 
 
+def mean_offdiag_correlation(mat: pd.DataFrame) -> float:
+    """Mean of the pairwise (off-diagonal) correlations in a matrix.
+
+    A single robust scalar for "how correlated is the basket overall": the
+    classic measure of co-movement that tends to intensify under stress.
+    """
+    values = mat.to_numpy()
+    iu = np.triu_indices(len(values), k=1)
+    return float(np.nanmean(values[iu]))
+
+
 def corr_stability(mat_a: pd.DataFrame, mat_b: pd.DataFrame) -> float:
     """Mean absolute difference between two correlation matrices on common names.
 
