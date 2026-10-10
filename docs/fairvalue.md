@@ -50,7 +50,7 @@ market is implying (dividend yield for the S&P, convenience yield for gold/crude
 - CL: spot is above the front future on 61.3% of days (backwardation). Naive carry says the
   future should be above spot by the interest rate; the market says otherwise, so the implied
   convenience yield is ~4% median (large and unstable; the mean abs gap is 3x the median,
-  driven by 2020 and 2022). That is the point: for commodities the convenience yield is the
+  by year the mean abs gap ranges from 12 bps in 2021 to 217 bps in 2026, with 2020 at 92 and 2022 at 77). That is the point: for commodities the convenience yield is the
   main unknown, not a rounding error.
 - GC: gap is mostly the proxy error plus a persistent ~1% implied number that should be near 0.
 - Scenario (ES front contract, as of 2026-10-09): model fair value 7854.05 vs last market
