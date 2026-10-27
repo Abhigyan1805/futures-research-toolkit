@@ -6,8 +6,7 @@ that matters for trading: *do those patterns actually predict the next 1, 5 or
 10-day return, better than chance?* The answer, on 17 years of real data, is
 mostly **no** -- and the report says so with the numbers.
 
-This is PS-II project 3 (Robust Candlestick Pattern Recognition) turned into a
-small, honest research tool.
+A small, honest research tool for robust candlestick pattern recognition.
 
 ## What it produces
 
