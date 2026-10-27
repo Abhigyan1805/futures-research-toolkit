@@ -1,4 +1,4 @@
-"""Calendar spread / butterfly correlation and regime study (PS project 2).
+"""Calendar spread / butterfly correlation and regime study.
 
 This package quantifies how correlation structure among short-rate calendar
 spreads and butterflies changes across market regimes, and labels calm versus

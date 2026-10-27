@@ -25,7 +25,7 @@ I also solve the formula backwards for the **implied yield** that would make the
 turns a "model error" into a market reading. Scenario grids show fair value under spot, rate and
 time shocks (about 0.151 ES points per bp of rate), also exported to Excel with live formulas.
 
-For STIR products (the notice's wording) the analogue is a rate future priced as 100 − expected
+For STIR products the analogue is a rate future priced as 100 − expected
 rate; the cost-of-carry idea is the same, but a free-data version for listed STIR contracts
 is not possible, so I built the engine on equity, metal and energy futures and said so.
 

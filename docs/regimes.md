@@ -1,7 +1,6 @@
 # Short-rate spread / butterfly correlation and regime dynamics
 
-PS project 2 ("Correlation study & Regime Dynamics") built as a small, honest
-version: quantify and compare correlation structure among short-rate calendar
+A small, honest study: quantify and compare correlation structure among short-rate calendar
 spreads and butterflies, detect regimes, and show how relationships change
 between calm and stressed markets.
 

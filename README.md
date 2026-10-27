@@ -1,14 +1,14 @@
 # futures-research-toolkit
 
-Three small, reproducible research projects on free market data, built to mirror the three
-projects in the Futures First PS-II notice for the International Markets (derivatives trading)
-internship. Everything below comes from one real run (`make e2e`, data to 2026-10-09).
+Three small, reproducible research tools for futures and rates on free market data: what a
+futures contract should be worth, how short-rate spreads and regimes behave, and whether
+candlestick patterns have real predictive power. Everything below comes from one real run (`make e2e`, data to 2026-10-09).
 
-| PS project | Module | What it does |
+| Project | Module | What it does |
 |---|---|---|
-| Pricing & Risk Engine for STIR products | [`fairvalue/`](fairvalue) | Cost-of-carry fair value `F = S·exp((r+u−q−c)·T)` for ES, gold and WTI crude futures against market prices; implied dividend/convenience yield; spot / rate / time-to-expiry scenario grids; Excel export with live formulas. |
-| Correlation study & Regime Dynamics | [`regimes/`](regimes) | Calendar spreads and butterflies on the short-rate curve, correlation structure per regime, a Gaussian HMM written from scratch plus a transparent threshold detector, checked against known stress episodes. |
-| Robust Candlestick Pattern Recognition | [`candles/`](candles) | 14 classic patterns (hammer, doji, marubozu, engulfing, harami, morning/evening star, three soldiers/crows, …) labelled on every candle of 5 futures, then tested for real predictive power with multiple-testing correction. |
+| Futures fair value / pricing | [`fairvalue/`](fairvalue) | Cost-of-carry fair value `F = S·exp((r+u−q−c)·T)` for ES, gold and WTI crude futures against market prices; implied dividend/convenience yield; spot / rate / time-to-expiry scenario grids; Excel export with live formulas. |
+| Rate-curve correlation and regimes | [`regimes/`](regimes) | Calendar spreads and butterflies on the short-rate curve, correlation structure per regime, a Gaussian HMM written from scratch plus a transparent threshold detector, checked against known stress episodes. |
+| Candlestick pattern significance | [`candles/`](candles) | 14 classic patterns (hammer, doji, marubozu, engulfing, harami, morning/evening star, three soldiers/crows, …) labelled on every candle of 5 futures, then tested for real predictive power with multiple-testing correction. |
 
 ```mermaid
 flowchart LR

@@ -1,1 +1,1 @@
-"""Candlestick pattern recognition with significance tests (PS project 3)."""
+"""Candlestick pattern recognition with significance tests."""
